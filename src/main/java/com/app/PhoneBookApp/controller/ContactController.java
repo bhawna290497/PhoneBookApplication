@@ -6,9 +6,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,5 +49,33 @@ public class ContactController {
 	{
 		Contact byId = contactServiecI.getContactById(id);
 		return new ResponseEntity<Contact>(byId,HttpStatus.OK);
+	}
+	
+	@PutMapping(value = "/updateContact", consumes = "application/json")
+	public ResponseEntity<String> updateContact(@RequestBody Contact contact) {
+
+		boolean saveContact = contactServiecI.updateContact(contact);
+
+		if (saveContact) {
+			String msg = "Contact Updated  Successfully";
+			return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Contact not Updated Successfully", HttpStatus.CREATED);
+
+		}
+
+	}
+	
+	@DeleteMapping(value="/deleteContact/{contactId}")
+	public ResponseEntity<String> deleteContact(@PathVariable Integer contactId){
+		boolean deleteContact = contactServiecI.deleteContact(contactId);
+		
+		if(deleteContact) {
+			String msg = "Contact Deleted  Successfully";
+			return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+		} else {
+			return new ResponseEntity<String>("Contact not Deleted Successfully", HttpStatus.CREATED);
+
+		}
 	}
 }

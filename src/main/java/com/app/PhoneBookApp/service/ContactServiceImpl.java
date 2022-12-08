@@ -33,6 +33,26 @@ public class ContactServiceImpl implements ContactServiecI{
 		Contact contact = this.contactRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Contact", "Contact id", id));
 		return contact;
 	}
+	@Override
+	public boolean updateContact(Contact contact) {
+		Contact contact2 = contactRepository.save(contact);
+
+		if (contact2 != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	@Override
+	public boolean deleteContact(Integer id) {
+		boolean existsById = contactRepository.existsById(id);
+		if (existsById) {
+			contactRepository.deleteById(id);
+			return true;
+		} else {
+			return false;
+		}
+	}
 	
 
 }

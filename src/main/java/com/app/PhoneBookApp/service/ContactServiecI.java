@@ -9,4 +9,6 @@ public interface ContactServiecI {
 	public boolean saveContact(Contact contact);
 	List<Contact> getAllContact();
 	Contact getContactById(Integer id);
+	boolean updateContact(Contact contact);
+	boolean deleteContact(Integer id);
 }
