@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.PhoneBookApp.entities.Contact;
+import com.app.PhoneBookApp.exception.ResourceNotFoundException;
 import com.app.PhoneBookApp.repository.ContactRepository;
 
 @Service
@@ -26,6 +27,11 @@ public class ContactServiceImpl implements ContactServiecI{
 	public List<Contact> getAllContact() {
 		List<Contact> findAll = contactRepository.findAll();
 		return findAll;
+	}
+	@Override
+	public Contact getContactById(Integer id) {
+		Contact contact = this.contactRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Contact", "Contact id", id));
+		return contact;
 	}
 	
 
