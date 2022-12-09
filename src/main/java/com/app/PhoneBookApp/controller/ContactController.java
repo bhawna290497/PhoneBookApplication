@@ -78,4 +78,17 @@ public class ContactController {
 
 		}
 	}
+	@DeleteMapping(value="/deleteContactsoft/{contactId}")
+	public ResponseEntity<String> deleteContactSoft(@PathVariable Integer contactId){
+		boolean deleteContact = contactServiecI.deleteConatctSoft(contactId);
+		
+		if(deleteContact) {
+			String msg = "Contact Deleted  Successfully";
+			return new ResponseEntity<String>(msg, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<String>("Contact not Deleted Successfully", HttpStatus.OK);
+
+		}
+		
+	}
 }

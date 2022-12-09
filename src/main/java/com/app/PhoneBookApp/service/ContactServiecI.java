@@ -11,4 +11,5 @@ public interface ContactServiecI {
 	Contact getContactById(Integer id);
 	boolean updateContact(Contact contact);
 	boolean deleteContact(Integer id);
+	boolean deleteConatctSoft(Integer id);
 }
