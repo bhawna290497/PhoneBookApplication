@@ -23,4 +23,10 @@ app:
     updateFail: Contact not Updated Successfully
     deleteSuccess: Contact Deleted  Successfully
     deleteFail: Contact not deleted
+    
+logging:
+  file:
+    name: Data.log
+  level:
+    root: info
      
