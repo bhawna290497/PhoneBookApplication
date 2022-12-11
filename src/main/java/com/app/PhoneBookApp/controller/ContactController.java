@@ -1,7 +1,7 @@
 package com.app.PhoneBookApp.controller;
 
 import java.util.List;
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.PhoneBookApp.entities.Contact;
+import com.app.PhoneBookApp.props.ApiProps;
+import com.app.PhoneBookApp.props.AppConstant;
 import com.app.PhoneBookApp.service.ContactServiecI;
 
 @RestController
@@ -23,19 +25,22 @@ public class ContactController {
 	@Autowired
 	private ContactServiecI contactServiecI;
 	
+	@Autowired
+	private ApiProps apiProps;
+	
 	@PostMapping(value = "/saveContact", consumes = "application/json")
 	public ResponseEntity<String> saveContact(@RequestBody Contact contact)
 	{
+		Map<String,String> messages = apiProps.getMessages();
+		System.out.println(messages);
 		boolean saveContact = contactServiecI.saveContact(contact);
 		if(saveContact)
-		{
-			String m="Contact save successfully";
-			return new ResponseEntity<String>(m, HttpStatus.CREATED);
+		{			
+			return new ResponseEntity<String>(messages.get(AppConstant.SAVE_SUCCESS), HttpStatus.CREATED);
 		}
 		else
 		{
-			String m="Contact not saved";
-			return new  ResponseEntity<String>(m, HttpStatus.CREATED);
+			return new  ResponseEntity<String>(messages.get(AppConstant.SAVE_FAIL), HttpStatus.BAD_REQUEST);
 		}
 	}
 	@GetMapping(value = "/getAllContact", produces = "application/json")
@@ -44,23 +49,30 @@ public class ContactController {
 		List<Contact> list = contactServiecI.getAllContact();
 		return new ResponseEntity<List<Contact>>(list, HttpStatus.OK);
 	}
+	
 	@GetMapping(value = "/getContact/{id}", produces = "application/json")
 	public ResponseEntity<Contact> getContactByID(@PathVariable Integer id)
 	{
+		Map<String,String> messages = apiProps.getMessages();
+		
 		Contact byId = contactServiecI.getContactById(id);
-		return new ResponseEntity<Contact>(byId,HttpStatus.OK);
-	}
+		if(byId!=null)
+		{	
+			return new ResponseEntity<Contact>(byId,HttpStatus.OK);
+		}
+		else                                                                                                                                                                                                 
+			return new ResponseEntity(messages.get(AppConstant.GET_CONTACT),HttpStatus.BAD_REQUEST);
+		}
 	
 	@PutMapping(value = "/updateContact", consumes = "application/json")
 	public ResponseEntity<String> updateContact(@RequestBody Contact contact) {
 
+		Map<String,String> messages = apiProps.getMessages();
 		boolean saveContact = contactServiecI.updateContact(contact);
-
 		if (saveContact) {
-			String msg = "Contact Updated  Successfully";
-			return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+			return new ResponseEntity<String>(messages.get(AppConstant.UPDATE_SUCCESS), HttpStatus.CREATED);
 		} else {
-			return new ResponseEntity<String>("Contact not Updated Successfully", HttpStatus.CREATED);
+			return new ResponseEntity<String>(messages.get(AppConstant.UPDATE_FAIL), HttpStatus.CREATED);
 
 		}
 
@@ -68,25 +80,24 @@ public class ContactController {
 	
 	@DeleteMapping(value="/deleteContact/{contactId}")
 	public ResponseEntity<String> deleteContact(@PathVariable Integer contactId){
-		boolean deleteContact = contactServiecI.deleteContact(contactId);
 		
+		Map<String,String> messages = apiProps.getMessages();
+		boolean deleteContact = contactServiecI.deleteContact(contactId);
 		if(deleteContact) {
-			String msg = "Contact Deleted  Successfully";
-			return new ResponseEntity<String>(msg, HttpStatus.CREATED);
+			return new ResponseEntity<String>(messages.get(AppConstant.DELETE_SUCCESS), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("Contact not Deleted Successfully", HttpStatus.CREATED);
+			return new ResponseEntity<String>(messages.get(AppConstant.DELETE_FAIL), HttpStatus.OK);
 
 		}
 	}
 	@DeleteMapping(value="/deleteContactsoft/{contactId}")
 	public ResponseEntity<String> deleteContactSoft(@PathVariable Integer contactId){
+		Map<String,String> messages = apiProps.getMessages();
 		boolean deleteContact = contactServiecI.deleteConatctSoft(contactId);
-		
 		if(deleteContact) {
-			String msg = "Contact Deleted  Successfully";
-			return new ResponseEntity<String>(msg, HttpStatus.OK);
+			return new ResponseEntity<String>(messages.get(AppConstant.DELETE_SUCCESS), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<String>("Contact not Deleted Successfully", HttpStatus.OK);
+			return new ResponseEntity<String>(messages.get(AppConstant.DELETE_FAIL), HttpStatus.OK);
 
 		}
 		

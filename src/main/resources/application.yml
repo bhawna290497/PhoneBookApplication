@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost/phone_book_app
+    username: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+    show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ant-path-matcher
+app:
+  messages:
+    saveSuccess: Contact save successfully
+    saveFail: Contact not saved
+    getContact: Contact not found
+    updateSuccess: Contact Updated  Successfully
+    updateFail: Contact not Updated Successfully
+    deleteSuccess: Contact Deleted  Successfully
+    deleteFail: Contact not deleted
+     

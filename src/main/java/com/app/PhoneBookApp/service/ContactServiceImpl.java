@@ -1,12 +1,15 @@
 package com.app.PhoneBookApp.service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.app.PhoneBookApp.entities.Contact;
 import com.app.PhoneBookApp.exception.ResourceNotFoundException;
+import com.app.PhoneBookApp.props.AppConstant;
 import com.app.PhoneBookApp.repository.ContactRepository;
 
 @Service
@@ -30,8 +33,12 @@ public class ContactServiceImpl implements ContactServiecI{
 	}
 	@Override
 	public Contact getContactById(Integer id) {
-		Contact contact = this.contactRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Contact", "Contact id", id));
-		return contact;
+		Optional<Contact> findById = contactRepository.findById(id);
+		if(findById.isPresent()) {
+			Contact contact = findById.get();
+			return contact;
+		}
+		return null;
 	}
 	@Override
 	public boolean updateContact(Contact contact) {
@@ -45,24 +52,25 @@ public class ContactServiceImpl implements ContactServiecI{
 	}
 	@Override
 	public boolean deleteContact(Integer id) {
-		boolean existsById = contactRepository.existsById(id);
-		if (existsById) {
+		Optional<Contact> findById = contactRepository.findById(id);
+		if(findById.isPresent())
+		{
 			contactRepository.deleteById(id);
 			return true;
-		} else {
-			return false;
 		}
+		else
+			return false;
 	}
 	@Override
 	public boolean deleteConatctSoft(Integer id) {
-		Contact contact = contactRepository.findById(id).get();
-		if(contact !=null) {
-		
-			contact.setActiveSwitch('N');
+		Optional<Contact> findById = contactRepository.findById(id);
+		if(findById.isPresent())
+		{
+			Contact contact = findById.get();
+			contact.setActiveSwitch(AppConstant.N);
 			contactRepository.save(contact);
 			return true;
-		}else
-		
+		}
 		return false;
 	}
 	
